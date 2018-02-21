@@ -1,0 +1,229 @@
+---
+title: "About Tidyverse"
+author: "Tianying Zhang"
+date: "2/20/2018"
+output: pdf_document
+---
+
+#10.5
+
+# Tibbles
+
+```{r message=FALSE}
+library("tidyverse")
+```
+
+
+## Exercises
+
+1. How can you tell if an object is a tibble? (Hint: try printing `mtcars`, which is a regular data frame).
+
+```{r}
+mtcars
+```
+
+```{r}
+class(mtcars)
+```
+
+```{r}
+class(as_tibble(mtcars))
+```
+
+Tibbles will only print out a limited number of rows and show the class on top of each column. Additionally, tibbles have class `"tbl_df"` and `"tbl_"` in addition to `"data.frame"`.
+
+2. Compare and contrast the following operations on a `data.frame` and equivalent tibble. What is different? Why might the default data frame behaviors cause you frustration?
+
+```{r}
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+```
+
+```{r}
+tbl <- as_tibble(df)
+tbl$x
+tbl[, "xyz"]
+tbl[, c("abc", "xyz")]
+```
+
+Using `$` a data.frame will partially complete the column. So even though we wrote `df$x` it returned `df$xyz`. This saves a few keystrokes, but can result in accidentally using a different variable than you thought you were using.
+
+With data.frames, with `[` the type of object that is returned differs on the number of columns. If it is one column, it won't return a data.frame, but instead will return a vector. With more than one column, then it will return a data.frame. This is fine if you know what you are passing in, but suppose you did `df[ , vars]` where `vars` was a variable. Then you what that code does depends on `length(vars)` and you'd have to write code to account for those situations or risk bugs.
+
+3. If you have the name of a variable stored in an object, e.g. `var <- "mpg"`, how can you extract the reference variable from a tibble?
+
+You can use the double bracket, like `df[[var]]`. You cannot use the dollar sign, because `df$var` would look for a column named `var`. 
+
+4. Practice referring to non-syntactic names in the following data frame by:
+
+    1. Extracting the variable called 1.
+    2. Plotting a scatterplot of 1 vs 2.
+    3. Creating a new column called 3 which is 2 divided by 1.
+    4. Renaming the columns to one, two and three.
+
+
+```{r}
+annoying <- tibble(
+  `1` = 1:10,
+  `2` = `1` * 2 + rnorm(length(`1`))
+)
+```
+
+Extract the variable called 1:
+```{r}
+annoying[["1"]]
+```
+or
+```{r}
+annoying$`1`
+```
+
+A scatter plot of `1` vs. `2`:
+```{r}
+ggplot(annoying, aes(x = `1`, y = `2`)) +
+  geom_point()
+```
+
+A new column `3` with is `2` divided by `1`:
+```{r}
+annoying[["3"]] <- annoying$`2` / annoying$`1`
+```
+or
+```{r}
+annoying[["3"]] <- annoying[["2"]] / annoying[["1"]]
+```
+
+
+Renaming the columns to `one`, `two`, and `three`:
+```{r}
+annoying <- rename(annoying, one = `1`, two = `2`, three = `3`)
+glimpse(annoying)
+```
+
+5. What does `tibble::enframe()` do? When might you use it?
+
+It converts named vectors to a data frame with names and values
+```{r eval=FALSE}
+?tibble::enframe
+```
+
+```{r}
+enframe(c(a = 1, b = 2, c = 3))
+```
+
+
+6. What option controls how many additional column names are printed at the footer of a tibble?
+
+The print function for tibbles is in `print.tbl_df`:
+```{r eval=FALSE}
+?print.tbl_df
+```
+The option `n_extra` determines the number of extra columns to print information for.
+
+#12.6.1
+## Case Study
+
+This code is repeated from the chapter because it is needed by the exercises.
+
+```{r}
+who1 <- who %>%
+  gather(new_sp_m014:newrel_f65, key = "key", value = "cases", na.rm = TRUE)
+glimpse(who1)
+```
+
+```{r}
+who2 <- who1 %>%
+ mutate(key = stringr::str_replace(key, "newrel", "new_rel"))
+
+```
+
+```{r}
+who3 <- who2 %>%
+  separate(key, c("new", "type", "sexage"), sep = "_")
+who3
+```
+
+```{r}
+who3 %>%
+  count(new)
+```
+
+```{r}
+who4 <- who3 %>%
+  select(-new, -iso2, -iso3)
+```
+
+```{r}
+who5 <- who4 %>%
+  separate(sexage, c("sex", "age"), sep = 1)
+who5
+```
+
+1. In this case study I set `na.rm = TRUE` just to make it easier to check that we had the correct values. Is this reasonable? Think about how missing values are represented in this dataset. Are there implicit missing values? What’s the difference between an `NA` and zero?
+
+Perhaps? I would need to know more about the data generation process. 
+There are zero's in the data, which means they may explicitly be indicating no cases.
+```{r}
+who1 %>%
+  filter(cases == 0) %>%
+  nrow()
+```
+
+So it appears that either a country has all its values in a year as non-missing if the WHO collected data for that country, or all its values are non-missing. 
+So it is okay to treat explicitly and implicitly missing values the same, and we don't lose any information by dropping them.
+```{r}
+gather(who, new_sp_m014:newrel_f65, key = "key", value = "cases") %>%
+  group_by(country, year)  %>%
+  mutate(missing = is.na(cases)) %>%
+  select(country, year, missing) %>%
+  distinct() %>%
+  group_by(country, year) %>%
+  filter(n() > 1)
+
+```
+
+
+
+2. What happens if you neglect the `mutate()` step? (`mutate(key = stringr::str_replace(key, "newrel", "new_rel")`)
+
+`separate` emits the warning "too few values", and if we check the 
+rows for keys beginning with `"newrel_"`, we see that `sexage` is messing, 
+and `type = m014`.
+
+```{r}
+who3a <- who1 %>%
+  separate(key, c("new", "type", "sexage"), sep = "_")
+
+filter(who3a, new == "newrel") %>% head()
+```
+
+
+3. I claimed that `iso2` and `iso3` were redundant with country. Confirm this claim.
+
+```{r}
+select(who3, country, iso2, iso3) %>%
+  distinct() %>%
+  group_by(country) %>%
+  filter(n() > 1)
+
+```
+
+
+4. For each country, year, and sex compute the total number of cases of TB. Make an informative visualization of the data.
+
+```{r}
+who5 %>%
+  group_by(country, year, sex) %>%
+  filter(year > 1995) %>%
+  summarise(cases = sum(cases)) %>%
+  unite(country_sex, country, sex, remove = FALSE) %>%
+  ggplot(aes(x = year, y = cases, group = country_sex, colour = sex)) +
+  geom_line()
+
+  
+```
+
+A small multiples plot faceting by country is difficult given the number of countries.
+Focusing on those countries with the largest changes or absolute magnitudes after providing the context above is another option.
