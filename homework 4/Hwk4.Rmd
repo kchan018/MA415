@@ -1,0 +1,99 @@
+---
+title: "HW#4"
+author: "Tianying Zhang"
+date: "2/26/2018"
+output: pdf_document
+---
+#12.6.1
+
+```{r message=FALSE}
+library("tidyverse")
+```
+## Case Study
+
+```{r}
+who1 <- who %>%
+  gather(new_sp_m014:newrel_f65, key = "key", value = "cases", na.rm = TRUE)
+glimpse(who1)
+```
+
+```{r}
+who2 <- who1 %>%
+ mutate(key = stringr::str_replace(key, "newrel", "new_rel"))
+
+```
+
+```{r}
+who3 <- who2 %>%
+  separate(key, c("new", "type", "sexage"), sep = "_")
+who3
+```
+
+```{r}
+who3 %>%
+  count(new)
+```
+
+```{r}
+who4 <- who3 %>%
+  select(-new, -iso2, -iso3)
+```
+
+```{r}
+who5 <- who4 %>%
+  separate(sexage, c("sex", "age"), sep = 1)
+who5
+```
+
+
+3. I claimed that `iso2` and `iso3` were redundant with country. Confirm this claim.
+
+```{r}
+select(who3, country, iso2, iso3) %>%
+  distinct() %>%
+  group_by(country) %>%
+  filter(n() > 1)
+
+```
+
+
+4. For each country, year, and sex compute the total number of cases of TB. Make an informative visualization of the data.
+
+```{r}
+who5 %>%
+  group_by(country, year, sex) %>%
+  filter(year > 1995) %>%
+  summarise(cases = sum(cases)) %>%
+  unite(country_sex, country, sex, remove = FALSE) %>%
+  ggplot(aes(x = year, y = cases, group = country_sex, colour = sex)) +
+  geom_line()
+
+  
+```
+
+A small multiples plot faceting by country is difficult given the number of countries.
+Focusing on those countries with the largest changes or absolute magnitudes after providing the context above is another option.
+
+#10.5
+
+# Tibbles
+
+```{r message=FALSE}
+library("tidyverse")
+```
+
+
+## Exercises
+5. What does `tibble::enframe()` do? When might you use it?
+
+It converts named vectors to a data frame with names and values
+```{r eval=FALSE}
+?tibble::enframe
+```
+
+```{r}
+enframe(c(a = 1, b = 2, c = 3))
+```
+
+
+
