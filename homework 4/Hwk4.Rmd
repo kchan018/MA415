@@ -140,10 +140,13 @@ counts <- count(religion, c("reltrad", "income"))
 names(counts)[1] <- "religion"
 
 raw <- dcast(counts, religion ~ income)
-raw
-raw2 <- filter(raw, religion == "Agnostic")
+head(raw, 10)
 
-raw2 %>% gather(key = "income", value = "freq", -religion)
+newraw <- 
+raw %>% 
+  gather(key = "income", value = "freq", -religion) %>%
+  arrange(religion)
+head(newraw, 10)
 ```
 ## table 7 -> table 8
 ```{r}

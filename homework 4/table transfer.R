@@ -1,7 +1,8 @@
-
+library(tidyverse)
 library(foreign)
 library(stringr)
 library(plyr)
+library(dplyr)
 library(reshape2)
 source("xtable.r")
 
@@ -44,5 +45,7 @@ xtable(counts[1:10, ], file = "pew-clean.tex")
 # Convert into the form in which I originally saw it -------------------------
 
 raw <- dcast(counts, religion ~ income)
-raw2 <- filter(raw, religion == "Agnostic")
-raw2 %>% gather(key = "income", value = "freq", -religion)
+raw %>% 
+  gather(key = "income", value = "freq", -religion) %>%
+  arrange(religion)
+
