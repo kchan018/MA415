@@ -53,6 +53,21 @@ Bar 35's range includes Cornish real ale, larger, cider, Italian coffees, wine a
 
 ![Bude 35](/Users/tianyingzhang/Documents/MA416/maps-hw/bude35.jpg)
 
+## The Falcon Hotel
+Established in 1798, the Falcon Hotel is the oldest coaching hotel in North Cornwall. It is located near many visitor attractions such as The Castle at Bude, as well as many nearby restaurants and pubs like Bar 35 or The Barrel. Not only can you book a luxury room here, but you can also book a table in Lord Tennysons Restaurant and Coachmans Bar, both of which are located in the hotel.
+
+```{r}
+plot(1:10, type="n", yaxt = "n", xaxt = "n", xlab = "", ylab = "")
+rasterImage(readJPEG("The Falcon Hotel.jpg"),0,0,10.5,10.5)
+```
+
+## Edgcumbe Hotel
+This hotel is conveniently locateed near Summerleaze Beach and the tidal pool in Bude. It is also not too far away from the Bude North Cornwall Cricket Club, as well as Sainsbury's grocery store. Some amenities for this hotel include free parking, free Wi-Fi, laundry service, and complimentary breakfast with your stay.
+
+```{r}
+plot(1:10, type="n", yaxt = "n", xaxt = "n", xlab = "", ylab = "")
+rasterImage(readJPEG("Edgcumbe Hotel.jpg"),0,0,10.5,10.5)
+```
 
 ## Route from Cricket ground to nearby pub 
 ```{r echo=FALSE}
