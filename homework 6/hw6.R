@@ -99,13 +99,37 @@ Route_CricketBar <- ggmap(map_Bude_road) +
     data = route_df, lineend = "round"
   )
 
+############################################################################################################################
+# Two hotels added by Kevin Chan.
+
+# The Falcon Hotel
+gc_falcon <- geocode("The Falcon Hotel, Bude EX23 8SD, UK")
+data_falcon <- as.data.frame(gc_falcon)
+map_falcon <- get_map(data_falcon)
+
+Falcon_RoadMap <- ggmap(map_falcon) +
+  geom_point(
+    aes(x = lon, y = lat),
+    data = data_falcon, color = "Purple", size = 4
+  )
+
+# Edgcumbe Hotel
+gc_edgcumbe <- geocode("Edgcumbe Hotel, Bude EX23 8HJ, UK")
+data_edgcumbe <- as.data.frame(gc_edgcumbe)
+map_edgcumbe <- get_map(data_edgcumbe)
+
+Edgcumbe_RoadMap <- ggmap(map_edgcumbe) +
+  geom_point(
+    aes(x = lon, y = lat),
+    data = data_edgcumbe, color = "Orange", size = 4
+  )
 
 #############################################################################################################################
 #visualization:
 
 #create a data frame containing all locations
-lon_all <- as.numeric(c(data_Bude[1], data_cricket[1], data_beach1[1],data_beach2[1],data_pub[1]))
-lat_all <- as.numeric(c(data_Bude[2], data_cricket[2],data_beach1[2],data_beach2[2], data_pub[2]))
+lon_all <- as.numeric(c(data_Bude[1], data_cricket[1], data_beach1[1],data_beach2[1],data_pub[1],data_falcon[1],data_edgcumbe[1]))
+lat_all <- as.numeric(c(data_Bude[2], data_cricket[2],data_beach1[2],data_beach2[2], data_pub[2],data_falcon[2],data_edgcumbe[2]))
 allData <- data.frame(lon=lon_all, lat=lat_all)
 
 
@@ -115,13 +139,18 @@ all_spots_Roadmap <- ggmap(map_Bude_road) +
   geom_point(aes(x = lon, y = lat), data = data_beach1, color = "yellow" , size = 3)+
   geom_point(aes(x = lon, y = lat), data = data_beach2,color = "Green" , size = 3)+
   geom_point(aes(x = lon, y = lat), data = data_pub, color = "Blue" , size = 3)+
+  # Added Hotels
+  geom_point(aes(x = lon, y = lat), data = data_falcon, color = "Purple", size = 3)+
+  geom_point(aes(x = lon, y = lat), data = data_edgcumbe, color = "Orange", size = 3)+
   geom_text(aes(x = lon, y = lat, label="Bude"), data = data_Bude, vjust=1, hjust=1,size=3)+
   geom_text(aes(x = lon, y = lat, label="Cricket Club"), data_cricket, vjust=1, hjust=1,size=3)+
   geom_text(aes(x = lon, y = lat, label="Sandy Mouth Beach"), data = data_beach1, vjust=1, hjust=1,size=3)+
   geom_text(aes(x = lon, y = lat, label="Summerleaze Beach"), data = data_beach2, vjust=1, hjust=1,size=3)+
   geom_text(aes(x = lon, y = lat, label="Bar 35"), data = data_pub, vjust=0, hjust=0,size=3)+
+  # Added Hotels Text
+  geom_text(aes(x = lon, y = lat, label="The Falcon Hotel"), data = data_falcon, vjust=1, hjust=1, size=3)+
+  geom_text(aes(x = lon, y = lat, label="Edgcumbe Hotel"), data = data_edgcumbe, vjust=1, hjust=1, size=3)+
   geom_path(aes(x = lon, y = lat), colour = "red", size = 1,data = route_df, lineend = "round")
-
 
 all_spots_Watermap <- ggmap(map_Bude_water) +
   geom_point(aes(x = lon, y = lat), data = data_Bude, color = "Brown", size = 3)+
@@ -129,11 +158,17 @@ all_spots_Watermap <- ggmap(map_Bude_water) +
   geom_point(aes(x = lon, y = lat), data = data_beach1, color = "yellow" , size = 3)+
   geom_point(aes(x = lon, y = lat), data = data_beach2,color = "Green" , size = 3)+
   geom_point(aes(x = lon, y = lat), data = data_pub, color = "Blue" , size = 3)+
+  # Added Hotels
+  geom_point(aes(x = lon, y = lat), data = data_falcon, color = "Purple", size = 3)+
+  geom_point(aes(x = lon, y = lat), data = data_edgcumbe, color = "Orange", size = 3)+
   geom_text(aes(x = lon, y = lat, label="Bude"), data = data_Bude, vjust=1, hjust=1,size=3)+
   geom_text(aes(x = lon, y = lat, label="Cricket Club"), data_cricket, vjust=1, hjust=1,size=3)+
   geom_text(aes(x = lon, y = lat, label="Sandy Mouth Beach"), data = data_beach1, vjust=1, hjust=1,size=3)+
   geom_text(aes(x = lon, y = lat, label="Summerleaze Beach"), data = data_beach2, vjust=1, hjust=1,size=3)+
   geom_text(aes(x = lon, y = lat, label="Bar 35"), data = data_pub, vjust=0, hjust=0,size=3)+
+  # Added Hotels Text
+  geom_text(aes(x = lon, y = lat, label="The Falcon Hotel"), data = data_falcon, vjust=1, hjust=1, size=3)+
+  geom_text(aes(x = lon, y = lat, label="Edgcumbe Hotel"), data = data_edgcumbe, vjust=1, hjust=1, size=3)+
   geom_path(aes(x = lon, y = lat), colour = "red", size = 1,data = route_df, lineend = "round")
 
 
@@ -143,5 +178,8 @@ SandyMouth_RoadMap
 Summerleaze_RoadMap
 Cricket_RoadMap
 Route_CricketBar
+# Added Hotels Road Maps
+Falcon_RoadMap
+Edgcumbe_RoadMap
 all_spots_Roadmap
 all_spots_Watermap
