@@ -1,0 +1,74 @@
+---
+title: "Assignment 6: Simple maps"
+author: "Tianying Zhang"
+date: "3/26/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("hw6.R")
+```
+
+## Assignment Description
+Find the town of Bude in Western England. This is a town that is well-known as a beach resort. You're going to make two maps of Bude – a road map and a watercolor map.
+
+On both maps, mark the map with vacation spots you might like: surfing beaches and the cricket grounds (one of the most stunning the the country and very local). Pick two local beaches (this will require some googling).
+
+Finally find a pub that is convenient to the cricket grounds. Mark the route from the grounds to the pub.
+
+```{r include=FALSE}
+library(ggmap)
+library(tidyverse)
+```
+
+
+## Beach1: Sandy Mouth Beach
+Large (2km long) pebbley beach with lots of sand at lower tides when it connects up with other Bude beaches.
+There are lots of interesting rock formations and pools along the length of the beach. Along with clean water Sandy Mouth is a good family beach.
+
+
+![Sandy Mouth Beach](/Users/tianyingzhang/Documents/MA416/maps-hw/Sandymouthbeach.jpg)
+
+
+## Beach2: Summerleaze Beach
+Located within easy walking distance of Bude town centre Summerleaze is a popular beach. However, the extensive sands in every direction mean at anything except high tide it is unlikely to feel crowded.
+Summerleaze is also an unusually interesting beach with a large breakwater complete with tower protecting a small harbour and the mouth of the Bude canal with its massive lock gates. On the opposite side of the beach there's a sea-water bathing pool making for safe bathing whatever the conditions. Backing onto the beach are grassy downs and the River Neet.
+
+
+![Summerleaze_Beach](/Users/tianyingzhang/Documents/MA416/maps-hw/Beach_huts_on_Summerleaze_Beach.jpg)
+
+## Cricket ground: Bude North Cornwall Cricket Club
+Bude North Cornwall Cricket Club is situated on the clifftops overlooking the Atlantic Ocean, and is quite simply one of the most stunning locations you could ever wish to visit, let alone play cricket at! 
+Bude North Cornwall Cricket Club was founded in 1870. Over the years it has played host to Hockey matches, Tennis, Cricket and even used for Mortar practice in WW2!
+Bude played only friendly matches until the late 1970's, entertaining local and touring sides throughout the summer months. Since joining the Cornwall Cricket League the club has held various league honours and still continues to host touring teams from around the world. 
+
+
+![Bude CC](/Users/tianyingzhang/Documents/MA416/maps-hw/budecc.jpg)
+
+
+## Nearby Pub : Bar 35
+Bar 35's range includes Cornish real ale, larger, cider, Italian coffees, wine and cocktails.
+
+
+![Bude 35](/Users/tianyingzhang/Documents/MA416/maps-hw/bude35.jpg)
+
+
+## Route from Cricket ground to nearby pub 
+```{r echo=FALSE}
+Route_CricketBar
+```
+
+
+## Road map with vacation spots
+```{r echo=FALSE}
+all_spots_Roadmap
+```
+
+## Water color  map with vacation spots
+```{r echo=FALSE}
+all_spots_Watermap
+```
+
+
+
